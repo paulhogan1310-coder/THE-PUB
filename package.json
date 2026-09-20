@@ -1,0 +1,8 @@
+{
+  "name": "the-pub-v0-1",
+  "private": true,
+  "version": "0.1.0",
+  "dependencies": {
+    "@vercel/blob": "^1.1.1"
+  }
+}

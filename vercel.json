@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/api/content",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/api/votes",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/api/events",
+      "destination": "/api/index"
+    }
+  ]
+}

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a0c0b">
+<title>THE PUB — Liverpool Matchday V0.1</title>
+<style>
+:root{--bg:#0a0c0b;--panel:#151816;--panel2:#101311;--line:#2a2e2c;--text:#f0ede6;--muted:#aaa79f;--red:#c8102e;--gold:#c9a86a;--ok:#7ed6a5;--warn:#f2c66d}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5}
+button,input,textarea,select{font:inherit}.serif{font-family:Georgia,"Times New Roman",serif}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.wrap{max-width:900px;margin:auto;padding:0 16px}.top{position:sticky;top:0;z-index:30;background:rgba(10,12,11,.94);backdrop-filter:blur(10px);border-bottom:1px solid #1e2220}
+.topin{display:flex;align-items:center;justify-content:space-between;padding:12px 0;gap:12px}.brand{display:flex;align-items:center;gap:10px}.mark{width:34px;height:34px;border-radius:50%;background:var(--red);display:grid;place-items:center;font:bold 18px Georgia}
+.title{font:20px Georgia}.sub,.tiny{font:10px ui-monospace,monospace;color:var(--muted)}.status{display:flex;align-items:center;gap:6px;font:10px ui-monospace,monospace}
+.dot{width:8px;height:8px;border-radius:50%;background:#777}.dot.live{background:var(--ok);box-shadow:0 0 0 3px rgba(126,214,165,.12)}.dot.bad{background:#e67b7b}
+.hero{padding:30px 0 22px}.eyebrow{font:11px ui-monospace,monospace;color:var(--gold);letter-spacing:.12em}.fixture{font:42px/1.02 Georgia;margin:7px 0}.phase{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:5px 10px;font:11px ui-monospace,monospace}
+nav{display:flex;gap:8px;overflow:auto;padding:0 0 14px}nav a{white-space:nowrap;border:1px solid var(--line);border-radius:999px;padding:6px 10px;font-size:11px;color:var(--text);text-decoration:none}
+section{padding:32px 0;border-top:1px solid #1e2220}h2{font:34px/1 Georgia;margin:0 0 16px}.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;margin:10px 0}.label{font:10px ui-monospace,monospace;color:var(--gold);letter-spacing:.08em;margin-bottom:5px}.body{font-size:14px}.muted{color:var(--muted)}.source{font:10px ui-monospace,monospace;color:var(--muted);margin-top:10px;word-break:break-word}.source a{color:inherit}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.btn{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:999px;padding:9px 12px;cursor:pointer}.btn.red{background:var(--red);border-color:var(--red)}.btn:disabled{opacity:.5;cursor:not-allowed}
+.notice{border-left:3px solid var(--warn);padding:10px 12px;background:#17150f;font-size:13px}.ok{color:var(--ok)}.warn{color:var(--warn)}
+.ground-item{padding:12px 0;border-bottom:1px solid var(--line)}.ground-item:last-child{border:0}.time{font:10px ui-monospace,monospace;color:var(--gold)}
+.admin{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.76);display:none;padding:16px;overflow:auto}.admin.open{display:block}.adminbox{max-width:900px;margin:20px auto;background:#111412;border:1px solid var(--line);border-radius:20px;padding:18px}
+.adminhead{display:flex;justify-content:space-between;align-items:center;gap:10px}.tabs{display:flex;gap:6px;overflow:auto;margin:14px 0}.tabs button{white-space:nowrap}.field{margin:12px 0}.field label{display:block;font:10px ui-monospace,monospace;color:var(--muted);margin-bottom:5px}.field input,.field textarea,.field select{width:100%;background:#090b0a;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:10px}.field textarea{min-height:110px;resize:vertical}
+.row{display:flex;gap:8px;flex-wrap:wrap}.spacer{flex:1}.err{color:#ff9b9b;font-size:12px}.success{color:var(--ok);font-size:12px}.footer{padding:28px 0 45px;color:var(--muted);font-size:11px}
+@media(max-width:620px){.fixture{font-size:34px}.grid2{grid-template-columns:1fr}.desktop{display:none}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap topin">
+<div class="brand"><div class="mark">P</div><div><div class="title">THE PUB — LIVERPOOL</div><div class="sub" id="headerFixture"></div></div></div>
+<div class="row"><div class="status"><span id="syncDot" class="dot"></span><span id="syncText">LOCAL</span></div><button class="btn" id="adminBtn">ADMIN</button></div>
+</div></header>
+<main class="wrap">
+<div class="hero"><div class="eyebrow">MATCHDAY, WHEREVER YOU ARE.</div><div class="fixture" id="fixtureTitle"></div><div class="row"><span class="phase" id="phaseBadge"></span><span class="phase" id="kickoffBadge"></span></div></div>
+<nav><a href="#gaffer">Gaffer</a><a href="#talk">Pub Talk</a><a href="#why">Why Today Matters</a><a href="#terrace">Terrace</a><a href="#ground">At The Ground</a><a href="#round">The Round</a><a href="#road">One For The Road</a></nav>
+
+<section id="gaffer"><h2>The Gaffer</h2><div id="gafferBody"></div></section>
+<section id="talk"><h2>Pub Talk</h2><div id="talkBody"></div></section>
+<section id="why"><h2>Why Today Matters</h2><div id="whyBody"></div></section>
+<section id="terrace"><h2>The Terrace</h2><div id="terraceBody"></div></section>
+<section id="ground"><h2>At The Ground</h2><div id="groundBody"></div></section>
+<section id="round"><h2>The Round</h2><div id="roundBody"></div></section>
+<section id="road"><h2>One For The Road</h2><div id="roadBody"></div></section>
+<div class="footer">Independent supporter prototype. Not affiliated with Liverpool FC, AFC Bournemouth or the Premier League. Current matchday information should be verified against official sources before publication.</div>
+</main>
+
+<div class="admin" id="admin"><div class="adminbox">
+<div class="adminhead"><div><div class="serif" style="font-size:26px">THE PUB — ADMIN</div><div class="tiny">Shared matchday editorial control</div></div><button class="btn" id="closeAdmin">CLOSE</button></div>
+<div class="tabs" id="tabs"></div><div id="adminPanel"></div>
+<div class="row"><button class="btn red" id="saveBtn">SAVE TO SHARED CONTENT</button><button class="btn" id="previewBtn">PREVIEW LOCALLY</button><span class="spacer"></span><span id="saveStatus"></span></div>
+</div></div>
+
+<script>
+const DEFAULT_CONTENT={
+version:2,phase:"PRE-MATCH",lastUpdated:"2026-09-20T07:35:00-04:00",
+fixture:{home:"Bournemouth",away:"Liverpool",date:"Sep 20, 2026",venue:"Vitality Stadium",kickoff:"9:00 AM EDT / 2:00 PM BST"},
+gaffer:{manager:"Andoni Iraola",status:"CURRENT",lastVerified:"Sep 20 2026 07:35 EDT",takeaways:["No new injuries reported in the cited Liverpool team-news item.","Unavailable: Conor Bradley, Federico Chiesa, Hugo Ekitike and Giovanni Leoni — verify again before publication.","Returning to Vitality adds context to the fixture; keep any direct quotation tied to its official source."],unavailable:["Conor Bradley","Federico Chiesa","Hugo Ekitike","Giovanni Leoni"],sourceLabel:"Liverpool FC team news — verify current page before matchday publication",sourceUrl:"https://www.liverpoolfc.com/news/afc-bournemouth-v-liverpool-team-news-1"},
+pubTalk:{lastVerified:"Sep 20 2026 07:35 EDT",bigStory:"Iraola returns to Vitality as Liverpool head coach. Refresh this item from current official reporting before participant release.",footballQuestion:"How much will familiarity between Iraola and Bournemouth shape the match?",aroundClub:"Use this space for one verified, genuinely current club talking point.",pubTake:"Does familiarity favor Iraola, or does it help Bournemouth anticipate his approach?"},
+why:{then:["Liverpool and Bournemouth have produced notable high-scoring and upset results in prior meetings.","Andoni Iraola previously managed Bournemouth — historical context only."],now:["CURRENT MANAGERS — verify from official club sources on match morning.","TEAM NEWS — Liverpool unavailable list requires final matchday verification; Bournemouth remains awaiting verified official update.","FORM — refresh from official competition/club sources before publication."]},
+terrace:[
+{title:"You'll Never Walk Alone",type:"EVERGREEN",story:"Liverpool's pre-match anthem and enduring supporter ritual.",when:"Pre-match and often after full-time",url:""},
+{title:"Fields of Anfield Road",type:"EVERGREEN",story:"Long-standing Liverpool supporter song.",when:"Commonly heard from supporters",url:""},
+{title:"Allez Allez Allez",type:"EVERGREEN",story:"A modern Liverpool terrace staple associated strongly with European runs.",when:"Often after big moments and on European nights",url:""},
+{title:"Virgil van Dijk",type:"CURRENT PLAYER — REVERIFY",story:"Keep only while current-player relevance is verified; do not invent or reproduce unverified lyrics.",when:"When heard from supporters",url:""}
+],
+ground:{status:"AWAITING LIVE",teamStatus:"AWAITING OFFICIAL UPDATE — T-60",teamText:"Confirmed teams expected approximately one hour before kickoff. Check back when official teams drop.",updates:[]},
+round:{question:"What's your pre-match call?",options:["Bournemouth 0-2 Liverpool","Bournemouth 1-2 Liverpool","1-1 Draw","Bournemouth 2-1 Liverpool"]},
+fulltime:{score:"Score to be confirmed live.",motm:"Awaiting full time.",feeling:"",managerReaction:"Awaiting verified reaction.",lastSong:"Only publish when genuinely identifiable / verified."}
+};
+
+const qs=new URLSearchParams(location.search);
+let contentId="vercel-shared";
+let votesId="vercel-shared";
+
+const isAdmin=qs.has("admin");
+let adminSecret=localStorage.getItem("the-pub-admin-secret")||"";
+let content=structuredClone(DEFAULT_CONTENT), votes={}, draft=structuredClone(content);
+let contentHealthy=false,votesHealthy=false,lastContentSync=null,lastVotesSync=null;
+const $=s=>document.querySelector(s), esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
+const arr=v=>Array.isArray(v)?v:[]; const lines=v=>String(v||"").split("\\n").map(x=>x.trim()).filter(Boolean);
+
+async function api(path,opts={}){const r=await fetch(path,{cache:"no-store",...opts});if(!r.ok){let m="";try{m=(await r.json()).error||""}catch{}throw new Error(m||String(r.status))}return r.status===204?null:r.json()}
+async function getJSON(id,key){if(key==="content")return api("/api/content");if(key==="votes")return api("/api/votes");return {}}
+async function putJSON(id,key,data,secret=""){if(key==="content")return api("/api/content",{method:"PUT",headers:{"Content-Type":"application/json","Authorization":"Bearer "+secret},body:JSON.stringify(data)});return true}
+function syncStatus(){
+ const ok=contentHealthy && (!votesId||votesHealthy);
+ $("#syncDot").className="dot "+(ok?"live":(contentId?"bad":""));
+ $("#syncText").textContent=ok?"LIVE":(contentId?"SYNC ERROR":"LOCAL");
+}
+async function fetchContent(){
+ if(!contentId){contentHealthy=false;syncStatus();return}
+ try{const j=await getJSON(contentId,"content"); if(j&&typeof j==="object"){content={...DEFAULT_CONTENT,...j};draft=structuredClone(content);render()} contentHealthy=true;lastContentSync=new Date()}
+ catch(e){contentHealthy=false} syncStatus()
+}
+async function fetchVotes(){
+ if(!votesId){votesHealthy=false;syncStatus();return}
+ try{votes=await getJSON(votesId,"votes")||{};votesHealthy=true;lastVotesSync=new Date();renderRound()}
+ catch(e){votesHealthy=false} syncStatus()
+}
+async function recordEvent(type,detail=""){try{await api("/api/events",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({type,detail:String(detail).slice(0,120),sid:sessionStorage.getItem("pubsid")||""})})}catch{}}
+if(!sessionStorage.getItem("pubsid"))sessionStorage.setItem("pubsid",crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).slice(2));
+recordEvent("page_open");
+
+function sourceLine(label,url,lastVerified){
+ return `<div class="source">${url?`Source: <a target="_blank" rel="noopener" href="${esc(url)}">${esc(label||url)}</a>`:esc(label||"Source pending")}${lastVerified?` · Last verified: ${esc(lastVerified)}`:""}</div>`;
+}
+function render(){
+ $("#headerFixture").textContent=`${content.fixture.home} v ${content.fixture.away} — ${content.fixture.date}`;
+ $("#fixtureTitle").textContent=`${content.fixture.home} v ${content.fixture.away}`;
+ $("#phaseBadge").textContent=content.phase;
+ $("#kickoffBadge").textContent=`${content.fixture.venue} · ${content.fixture.kickoff}`;
+ $("#gafferBody").innerHTML=`<div class="card"><div class="label">${esc(content.gaffer.status)}</div><div class="serif" style="font-size:23px">${esc(content.gaffer.manager)}</div><div class="body" style="margin-top:10px">${arr(content.gaffer.takeaways).map(x=>`<div>• ${esc(x)}</div>`).join("")}</div>${content.gaffer.unavailable?.length?`<div class="body" style="margin-top:12px"><b>Unavailable:</b> ${content.gaffer.unavailable.map(esc).join(", ")}</div>`:""}${sourceLine(content.gaffer.sourceLabel,content.gaffer.sourceUrl,content.gaffer.lastVerified)}</div>`;
+ $("#talkBody").innerHTML=[["BIG STORY",content.pubTalk.bigStory],["FOOTBALL QUESTION",content.pubTalk.footballQuestion],["AROUND THE CLUB",content.pubTalk.aroundClub],["PUB TAKE",content.pubTalk.pubTake]].map(([a,b])=>`<div class="card"><div class="label">${a}</div><div class="body">${esc(b)}</div></div>`).join("")+`<div class="source">Last verified: ${esc(content.pubTalk.lastVerified)}</div>`;
+ $("#whyBody").innerHTML=`<div class="card"><div class="label">THEN — HISTORICAL</div>${arr(content.why.then).map(x=>`<div class="body">• ${esc(x)}</div>`).join("")}</div><div class="card"><div class="label">NOW — CURRENT</div>${arr(content.why.now).map(x=>`<div class="body">• ${esc(x)}</div>`).join("")}</div>`;
+ $("#terraceBody").innerHTML=arr(content.terrace).map(s=>`<div class="card"><div class="label">${esc(s.type)}</div><div class="serif" style="font-size:20px">${esc(s.title)}</div><div class="body">${esc(s.story)}</div><div class="source">When: ${esc(s.when)}</div></div>`).join("")+`<div class="notice">New-player chants stay off the page until verified. No invented lyrics.</div>`;
+ renderGround();renderRound();renderRoad();
+}
+function renderGround(){
+ const g=content.ground||DEFAULT_CONTENT.ground;
+ $("#groundBody").innerHTML=`<div class="notice">${esc(g.status)}</div><div class="card"><div class="label">TEAM'S IN</div><div class="body">${esc(g.teamText)}</div><div class="source">${esc(g.teamStatus)}</div></div><div class="card"><div class="label">LIVE-ISH CULTURE FEED</div>${arr(g.updates).length?arr(g.updates).map(u=>`<div class="ground-item"><div class="time">${esc(u.time||"")}${u.source?` · ${esc(u.source)}`:""}</div><div class="body">${esc(u.text||"")}</div>${u.url?`<div class="source"><a target="_blank" rel="noopener" href="${esc(u.url)}">Open source</a></div>`:""}</div>`).join(""):`<div class="body muted">Around-the-ground updates begin only when genuine evidence is available. No fabricated atmosphere.</div>`}</div>`;
+}
+async function vote(option){const bs=[...document.querySelectorAll("#roundBody button")];bs.forEach(b=>b.disabled=true);try{votes=await api("/api/votes",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({option})});localStorage.setItem("the-pub-voted",option);recordEvent("vote",option);renderRound()}catch(e){alert("Vote could not sync. Please try again.")}finally{bs.forEach(b=>b.disabled=false)}}
+function renderRound(){
+ const r=content.round||DEFAULT_CONTENT.round;const voted=localStorage.getItem("the-pub-voted");
+ $("#roundBody").innerHTML=`<div class="card"><div class="serif" style="font-size:20px">${esc(r.question)}</div><div class="grid2" style="margin-top:12px">${arr(r.options).map(o=>`<button class="btn" data-vote="${esc(o)}">${esc(o)} · ${Number(votes[o])||0}${voted===o?" ✓":""}</button>`).join("")}</div></div>`;
+ document.querySelectorAll("[data-vote]").forEach(b=>b.onclick=()=>vote(b.dataset.vote));
+}
+function renderRoad(){
+ const f=content.fulltime||DEFAULT_CONTENT.fulltime;
+ $("#roadBody").innerHTML=content.phase==="FULL-TIME"?`<div class="card"><div class="label">FULL TIME</div><div class="serif" style="font-size:28px">${esc(f.score)}</div><div class="body" style="margin-top:12px"><b>Pub MOTM:</b> ${esc(f.motm)}</div>${f.feeling?`<div class="body"><b>The feeling:</b> ${esc(f.feeling)}</div>`:""}<div class="body"><b>Manager reaction:</b> ${esc(f.managerReaction)}</div><div class="body"><b>The Last Song:</b> ${esc(f.lastSong)}</div></div>`:`<div class="card"><div class="body muted">Opens after the final whistle: score, Pub MOTM, supporter feeling, verified manager reaction and The Last Song when genuinely identifiable.</div></div>`;
+}
+
+const tabs=["State","Gaffer","Pub Talk","Why","Terrace","Ground","Round","Full Time","Data"];let activeTab="State";
+function field(label,id,value,type="textarea"){return `<div class="field"><label>${label}</label>${type==="input"?`<input id="${id}" value="${esc(value)}">`:`<textarea id="${id}">${esc(value)}</textarea>`}</div>`}
+function adminUI(){
+ $("#tabs").innerHTML=tabs.map(t=>`<button class="btn ${t===activeTab?"red":""}" data-tab="${t}">${t}</button>`).join("");
+ document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{captureDraft();activeTab=b.dataset.tab;adminUI()});
+ const d=draft;let h="";
+ if(activeTab==="State")h=`<div class="field"><label>MATCHDAY STATE</label><select id="aPhase"><option ${d.phase==="PRE-MATCH"?"selected":""}>PRE-MATCH</option><option ${d.phase==="LIVE"?"selected":""}>LIVE</option><option ${d.phase==="FULL-TIME"?"selected":""}>FULL-TIME</option></select></div>${field("HOME","aHome",d.fixture.home,"input")}${field("AWAY","aAway",d.fixture.away,"input")}${field("DATE","aDate",d.fixture.date,"input")}${field("VENUE","aVenue",d.fixture.venue,"input")}${field("KICKOFF","aKick",d.fixture.kickoff,"input")}`;
+ if(activeTab==="Gaffer")h=field("MANAGER","aManager",d.gaffer.manager,"input")+field("STATUS","aGStatus",d.gaffer.status,"input")+field("TAKEAWAYS — one per line","aTake",arr(d.gaffer.takeaways).join("\\n"))+field("UNAVAILABLE — one per line","aUnavailable",arr(d.gaffer.unavailable).join("\\n"))+field("SOURCE LABEL","aSourceLabel",d.gaffer.sourceLabel,"input")+field("SOURCE URL","aSourceUrl",d.gaffer.sourceUrl,"input")+field("LAST VERIFIED","aGVerified",d.gaffer.lastVerified,"input");
+ if(activeTab==="Pub Talk")h=field("BIG STORY","aBig",d.pubTalk.bigStory)+field("FOOTBALL QUESTION","aQuestion",d.pubTalk.footballQuestion)+field("AROUND CLUB","aAround",d.pubTalk.aroundClub)+field("PUB TAKE","aTakeQ",d.pubTalk.pubTake)+field("LAST VERIFIED","aPVerified",d.pubTalk.lastVerified,"input");
+ if(activeTab==="Why")h=field("THEN — one item per line","aThen",arr(d.why.then).join("\\n"))+field("NOW — one item per line","aNow",arr(d.why.now).join("\\n"));
+ if(activeTab==="Terrace")h=field("TERRACE JSON","aTerrace",JSON.stringify(d.terrace,null,2));
+ if(activeTab==="Ground")h=field("STATUS","aGroundStatus",d.ground.status,"input")+field("TEAM STATUS","aTeamStatus",d.ground.teamStatus,"input")+field("TEAM TEXT","aTeamText",d.ground.teamText)+field("UPDATES JSON [{time,text,source,url}]","aUpdates",JSON.stringify(d.ground.updates||[],null,2));
+ if(activeTab==="Round")h=field("QUESTION","aRoundQ",d.round.question,"input")+field("OPTIONS — one per line","aRoundOpts",arr(d.round.options).join("\\n"));
+ if(activeTab==="Full Time")h=field("SCORE","aScore",d.fulltime.score,"input")+field("PUB MOTM","aMotm",d.fulltime.motm,"input")+field("THE FEELING","aFeeling",d.fulltime.feeling)+field("MANAGER REACTION","aReaction",d.fulltime.managerReaction)+field("LAST SONG","aLastSong",d.fulltime.lastSong);
+ if(activeTab==="Data")h=field("ADMIN TOKEN (stored only on this device)","aSecret",adminSecret,"input")+`<div class="notice">Shared backend: Vercel API + Blob. Participant links contain no credentials. Current sync: content ${contentHealthy?"✓":"⚠"}, votes ${votesHealthy?"✓":"⚠"}.</div>`;
+ $("#adminPanel").innerHTML=h;
+}
+function val(id){return document.getElementById(id)?.value}
+function captureDraft(){
+ try{
+ if(activeTab==="State"){draft.phase=val("aPhase")||draft.phase;Object.assign(draft.fixture,{home:val("aHome"),away:val("aAway"),date:val("aDate"),venue:val("aVenue"),kickoff:val("aKick")})}
+ if(activeTab==="Gaffer"){Object.assign(draft.gaffer,{manager:val("aManager"),status:val("aGStatus"),takeaways:lines(val("aTake")),unavailable:lines(val("aUnavailable")),sourceLabel:val("aSourceLabel"),sourceUrl:val("aSourceUrl"),lastVerified:val("aGVerified")})}
+ if(activeTab==="Pub Talk"){Object.assign(draft.pubTalk,{bigStory:val("aBig"),footballQuestion:val("aQuestion"),aroundClub:val("aAround"),pubTake:val("aTakeQ"),lastVerified:val("aPVerified")})}
+ if(activeTab==="Why"){draft.why.then=lines(val("aThen"));draft.why.now=lines(val("aNow"))}
+ if(activeTab==="Terrace"&&val("aTerrace"))draft.terrace=JSON.parse(val("aTerrace"));
+ if(activeTab==="Ground"){Object.assign(draft.ground,{status:val("aGroundStatus"),teamStatus:val("aTeamStatus"),teamText:val("aTeamText")});if(val("aUpdates"))draft.ground.updates=JSON.parse(val("aUpdates"))}
+ if(activeTab==="Round"){draft.round.question=val("aRoundQ");draft.round.options=lines(val("aRoundOpts"))}
+ if(activeTab==="Full Time"){Object.assign(draft.fulltime,{score:val("aScore"),motm:val("aMotm"),feeling:val("aFeeling"),managerReaction:val("aReaction"),lastSong:val("aLastSong")})}
+ if(activeTab==="Data"){adminSecret=val("aSecret")||"";if(adminSecret)localStorage.setItem("the-pub-admin-secret",adminSecret)}
+ return true}catch(e){$("#saveStatus").className="err";$("#saveStatus").textContent="Invalid JSON in this tab.";return false}
+}
+$("#adminBtn").onclick=()=>{if(!isAdmin){const ok=confirm("Open local admin controls? Participant links should not include ?admin.");if(!ok)return}draft=structuredClone(content);$("#admin").classList.add("open");adminUI();recordEvent("admin_open")};
+$("#closeAdmin").onclick=()=>$("#admin").classList.remove("open");
+$("#previewBtn").onclick=()=>{if(!captureDraft())return;content=structuredClone(draft);render();$("#saveStatus").className="success";$("#saveStatus").textContent="Local preview applied."};
+$("#saveBtn").onclick=async()=>{
+ if(!captureDraft())return;$("#saveStatus").className="";$("#saveStatus").textContent="Saving…";
+ if(!adminSecret){$("#saveStatus").className="err";$("#saveStatus").textContent="Add the admin write key in Data.";return}
+ try{draft.lastUpdated=new Date().toISOString();await putJSON(contentId,"content",draft,adminSecret);content=structuredClone(draft);contentHealthy=true;render();syncStatus();$("#saveStatus").className="success";$("#saveStatus").textContent="Saved and published."}
+ catch(e){$("#saveStatus").className="err";$("#saveStatus").textContent="Publish failed: "+e.message}
+};
+
+render();syncStatus();fetchContent();fetchVotes();
+setInterval(fetchContent,7000);setInterval(fetchVotes,5000);
+</script>
+</body>
+</html>
